@@ -1,5 +1,4 @@
 #include <charconv>
-
 namespace calcStringNS{
 template <char... chars>
 using tstring = std::integer_sequence<char, chars...>;
@@ -584,12 +583,13 @@ struct splitMathFunc {
   using expr = typename inter::expr;
 };
 
-template <typename Tcontext = emptyExecContext>
+template <typename T = int,typename Tcontext = emptyExecContext>
 struct userContext {
+  using type = T;
   using context = Tcontext;
 
   template <typename str>
-  using add = userContext<typename context::addDecl<typePair<
+  using add = userContext<T,typename context::addDecl<typePair<
       typename splitMathFunc<compString<str>>::name,
       mathFuncInfo<typename splitMathFunc<compString<str>>::expr,
                    typename splitMathFunc<compString<str>>::variableList>>>>;
@@ -616,14 +616,16 @@ struct preprocessString<tstring<c...>>{
 };
 }
 using detail::userContext;
-template <typename, typename = detail::emptyExecContext>
-constexpr int calcString = 0;
+template <typename, typename T = int>
+constexpr T calcString;
 
-template <char... c>
-constexpr int calcString<tstring<c...>> =
-    detail::mathEngineThing<detail::compString<tstring<c...>>, int>::calc();
+template <char... c,typename T>
+constexpr T calcString<tstring<c...>,T> =
+    detail::mathEngineThing<detail::compString<tstring<c...>>, T,detail::emptyExecContext>::calc();
 
-template <char... c, typename context>
-constexpr int calcString<tstring<c...>, detail::userContext<context>> =
-    detail::mathEngineThing<detail::compString<tstring<c...>>, int, context>::calc();
+template <char... c, typename T,typename context>
+constexpr T calcString<tstring<c...>, detail::userContext<T,context>> =
+    detail::mathEngineThing<detail::compString<tstring<c...>>, T, context>::calc();
+
+
 }
