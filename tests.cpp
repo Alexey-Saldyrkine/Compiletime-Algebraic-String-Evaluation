@@ -1,4 +1,4 @@
-#inlcude<calcString.hpp>
+#inlcude<CalcString.hpp>
 
 namespace{
 using namespace calcStringNS;
