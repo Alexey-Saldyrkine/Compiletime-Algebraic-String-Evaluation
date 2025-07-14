@@ -1,7 +1,7 @@
 # Compiletime Algebraic String Evaluation
 This is a single header that provides the capability to evaluate algeraic expressions at compiletime.
 
-## Examples
+## Example
 ```cpp
 using namespace calcStringNS;
 using context = userContext<>
