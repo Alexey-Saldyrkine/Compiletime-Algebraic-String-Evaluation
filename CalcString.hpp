@@ -1,4 +1,7 @@
 #include <charconv>
+#include <utility>
+#include <cstddef>
+
 namespace calcStringNS{
 template <char... chars>
 using tstring = std::integer_sequence<char, chars...>;
@@ -234,7 +237,7 @@ struct searchForOp<index, std::integer_sequence<char, '(', c...>, targets...> {
   using str = compString<tstring<'(', c...>>;
   static constexpr size_t newIndex = str::template findClosingBracket<0>;
   static_assert(newIndex <= str::size - 1);
-  using newStr = str::template substr<newIndex, str::size - 1>::asIntSeq;
+  using newStr = typename str::template substr<newIndex, str::size - 1>::asIntSeq;
   static constexpr size_t value =
       searchForOp<newIndex + index, newStr, targets...>::value;
 };
@@ -402,7 +405,7 @@ struct typeListAtImpl;
 
 template <size_t i, size_t target, typename T, typename... Ts>
 struct typeListAtImpl<i, target, typeList<T, Ts...>> {
-  using type = typeListAtImpl<i + 1, target, typeList<Ts...>>::type;
+  using type = typename typeListAtImpl<i + 1, target, typeList<Ts...>>::type;
 };
 
 template <size_t i, size_t target, typename T>
@@ -477,8 +480,8 @@ struct evaluateValueList<typeList<value>, T, context> {
 
 template <typename T, char... c, typename context>
 struct mathEngineThing<compString<tstring<c...>>, T, context> {
-  using str = compString<tstring<c...>>::stripParenthesis;
-  using res = individOp<str>::res;
+  using str = typename compString<tstring<c...>>::stripParenthesis;
+  using res = typename individOp<str>::res;
   static constexpr T calc() {
     // check it it is an expression or not
     if constexpr (res::index == -1) {
@@ -574,7 +577,7 @@ template <typename str>
 struct splitMathFunc {
   static constexpr size_t openningBracket = str::template findCharIndex<'('>;
   static constexpr size_t equalPos = str::template findCharIndex<'='>;
-  using inter = std::conditional<(openningBracket < equalPos),
+  using inter = typename std::conditional<(openningBracket < equalPos),
                                  splitMathFuncImpl<openningBracket, str>,
                                  splitMathFuncImpl<-1ull, str>>::type;
 

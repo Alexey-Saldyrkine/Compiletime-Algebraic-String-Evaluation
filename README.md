@@ -1,6 +1,26 @@
 # Compiletime Algebraic String Evaluation
 This is a single header that provides the capability to evaluate algeraic expressions at compiletime.
 
+## Examples
+```cpp
+using namespace calcStringNS;
+using context = userContext<>
+::add<decltype("a=2"_tstr)>
+::add<decltype("f(x)=2*x+x"_tstr)>
+::add<decltype("g(x)=f(x)+f(1)"_tstr)>;
+// declare the context the evaluation takes place in.
+
+using expr = decltype("f(a)+g(a)"_tstr); // the expression that will be evaluated.
+
+constexpr int exprValue = calcString<expr,context>;
+
+static_assert(exprValue == 15); // exprValue is evaluated at compile time
+
+
+```
+
+[godBolt link](https://godbolt.org/z/1qPhsbfKz)
+
 This is done using main three types, located in namespace calcStringNS.
 - tstring, is a type that represents an expression.
 - userContext, is a type that contains definitions of algebraic expressions, that can be used in other expressions.
