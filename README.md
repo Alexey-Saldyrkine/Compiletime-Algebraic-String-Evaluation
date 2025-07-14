@@ -19,7 +19,7 @@ static_assert(exprValue == 15); // exprValue is evaluated at compile time
 
 ```
 
-[godBolt link](https://godbolt.org/z/1qPhsbfKz)
+[godBolt link](https://godbolt.org/z/5Y84bhK87)
 
 This is done using main three types, located in namespace calcStringNS.
 - tstring, is a type that represents an expression.
